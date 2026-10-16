@@ -4,28 +4,55 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#F40009" />
-    <title>Volta do Vitu</title>
+    <title>Vitu de férias</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Lobster&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@500;700;800&family=Permanent+Marker&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F40009'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='16' font-family='Georgia'%3EV%3C/text%3E%3C/svg%3E" />
   </head>
   <body>
-    <div class="stage">
-      <p class="wordmark">Vitu</p>
-      <p class="who">Vitor Wallaf volta para a Solar</p>
-      <div class="clock" id="clock" aria-hidden="true">
-        <p class="unit"><span class="num" id="days">0</span><span class="name">dias</span></p>
-        <p class="unit"><span class="num" id="hours">0</span><span class="name">horas</span></p>
-        <p class="unit"><span class="num" id="minutes">0</span><span class="name">minutos</span></p>
-        <p class="unit"><span class="num" id="seconds">0</span><span class="name">segundos</span></p>
-      </div>
-      <h1 id="headline">Para o Vitu voltar</h1>
-      <p class="live" id="live" aria-live="polite"></p>
+    <div class="bubbles" id="bubbles" aria-hidden="true"></div>
+    <svg class="ribbon" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,140 C220,40 420,200 720,120 C1020,40 1220,150 1440,70 L1440,220 L0,220 Z" fill="#fff"/>
+    </svg>
+
+    <header class="top">
+      <p class="brand">Coca-Cola</p>
+      <p class="now"><span id="nowDate"></span><br /><span id="nowTime"></span></p>
+    </header>
+
+    <main>
+      <h1>
+        <span class="name">Vitu</span>
+        <span class="tag">de férias</span>
+      </h1>
+      <p class="subtitle">A Solar já separou o seu lugar, Vitor Wallaf.</p>
+
+      <section class="calendar" aria-labelledby="calHead">
+        <div class="rings" aria-hidden="true"><span></span><span></span></div>
+        <p class="cal-head" id="calHead">Faltam</p>
+        <div class="countdown" id="countdown">
+          <p class="unit"><span class="num" id="days">00</span><span class="lbl">dias</span></p>
+          <p class="colon" aria-hidden="true">:</p>
+          <p class="unit"><span class="num" id="hours">00</span><span class="lbl">horas</span></p>
+          <p class="colon" aria-hidden="true">:</p>
+          <p class="unit"><span class="num" id="minutes">00</span><span class="lbl">minutos</span></p>
+          <p class="colon" aria-hidden="true">:</p>
+          <p class="unit"><span class="num" id="seconds">00</span><span class="lbl">segundos</span></p>
+        </div>
+        <p class="cal-foot" id="calFoot">para o Vitu voltar para a gente</p>
+        <p class="return-date">Segunda-feira, 9 de novembro de 2026, 8h</p>
+        <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Quanto das férias já passou">
+          <div class="bar" id="bar"></div>
+        </div>
+        <p class="progress-lbl" id="progressLbl"></p>
+      </section>
+
       <p class="phrase" id="phrase"></p>
-      <p class="when">Segunda-feira, 9 de novembro de 2026, 8h.</p>
-    </div>
+      <p class="banner">A casa inteira está te esperando, Vitu.</p>
+      <p class="live" id="live" aria-live="polite"></p>
+    </main>
     <script src="app.js"></script>
   </body>
 </html>

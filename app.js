@@ -1,35 +1,34 @@
-const START_AT = Date.parse("2026-10-16T00:00:00-03:00");
-const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
 const START_DAY = "2026-10-16";
+const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
 
 const PHRASES = [
-  "A portaria já sente a sua falta, Vitu. Volta logo, a casa está alegre só de imaginar.",
-  "O cafezinho da manhã guarda uma xícara para você. Ainda quente de saudade.",
-  "Cada garrafa que sai da linha pergunta pelo trabalhador mais assíduo.",
-  "A Solar está em festa antecipada. Falta o convidado principal: você, Vitu.",
-  "O seu lugar continua reservado. Ninguém ocupa a cadeira do Vitu.",
-  "A equipe conta os segundos com um sorriso. Segunda de manhã vai ser boa.",
-  "O corredor vermelho está mais comprido sem você passando, Vitu.",
-  "Descansa bastante. A recepção já está sendo ensaiada.",
-  "O ponto eletrônico vai comemorar o dia em que o seu crachá voltar.",
-  "Tem gente perguntando de você o dia inteiro. A resposta é sempre a mesma: já já.",
-  "A escala da semana que vem já tem o seu nome no topo, Vitu.",
-  "A casa inteira brinda à sua volta, mesmo antes de você cruzar a portaria.",
-  "Você deixou um vazio gostoso de preencher. E a gente mal pode esperar.",
-  "O turno abre a porta devagar, só para ver se você chegou mais cedo.",
-  "Vitu, a operação segue, mas o melhor turno é o que tem você.",
-  "A saudade está doce, que nem o primeiro gole gelado. Volta logo.",
-  "Já separamos o seu lugar, o seu copo e a melhor história para te contar.",
-  "Falta pouco para a Solar ficar completa de novo. Falta você.",
-  "O relógio corre a favor da gente. Cada segundo aproxima o Vitu.",
-  "A portaria já ensaiou o bom dia. Agora só falta o dono dele.",
-  "Vitu, o descanso é seu. A alegria da volta é nossa.",
-  "A equipe está contando alto. Dá para ouvir da portaria.",
-  "Quase dá para ver o seu crachá na mesa. Segunda chega sorrindo.",
-  "Últimos instantes dessa espera boa. 8h da manhã, a casa te recebe.",
+  "A portaria já guarda um bom dia com o seu nome, Vitu. Pode vir com calma.",
+  "O cafezinho da manhã deixou uma xícara sua. A casa está leve só de esperar.",
+  "Cada garrafa na linha sai com pressa boa. A pressa é te ver de volta.",
+  "A Solar separou a sua cadeira, o seu turno e a melhor história da semana.",
+  "Descansa, Vitu. A recepção está sendo ensaiada sem pressa e com carinho.",
+  "O corredor vermelho vai ficar curto de novo no dia em que você passar.",
+  "A equipe fala de você sorrindo. Segunda de manhã vai ser o dia bom.",
+  "O seu crachá tem hora marcada. A portaria abre às 8h, sem falta.",
+  "Tem gente contando o seu retorno como quem espera o intervalo.",
+  "A escala da volta já está escrita. O primeiro nome da manhã é o seu.",
+  "A casa brinda antes. O gole gelado fica para quando você chegar.",
+  "Vitu, o lugar não esfriou. Está quente de gente que gosta de você aqui.",
+  "O turno da manhã abre a porta como quem recebe visita querida.",
+  "Você faz falta do jeito certo: aquele que a gente quer de volta logo.",
+  "A operação segue, e o melhor pedaço dela volta com você.",
+  "A saudade está doce. A chegada vai ser melhor.",
+  "Já deixamos o seu canto pronto. Falta só o Vitu sentar.",
+  "Falta pouco para a Solar ficar inteira. O pedaço que falta tem nome.",
+  "O relógio trabalha a nosso favor. Cada segundo te traz para a portaria.",
+  "O bom dia já foi ensaiado. Agora só falta quem responde.",
+  "O descanso é seu, Vitu. A alegria de abrir a porta é nossa.",
+  "Dá para ouvir a equipe contando. A portaria escuta da rua.",
+  "Quase dá para ver a segunda. O turno das 8h tem o seu nome na frente.",
+  "Última noite dessa espera. Amanhã, 8h, a casa te recebe de braços abertos.",
 ];
 
-const pad = (value) => String(value).padStart(2, "0");
+const pad = (n) => String(n).padStart(2, "0");
 
 function saoPauloDate(date) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -61,60 +60,29 @@ function sentence(time) {
   return `Faltam ${bit(time.days, "dia", "dias")}, ${bit(time.hours, "hora", "horas")}, ${bit(time.minutes, "minuto", "minutos")} e ${bit(time.seconds, "segundo", "segundos")} para o Vitu voltar.`;
 }
 
-function clockNow(date) {
-  const parts = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).formatToParts(date);
-  const get = (type) => parts.find((part) => part.type === type)?.value || "";
-  const day = get("weekday");
-  document.getElementById("nowDate").textContent = `${day.charAt(0).toUpperCase()}${day.slice(1)}, ${get("day")} de ${get("month")}`;
-  document.getElementById("nowTime").textContent = `${get("hour")}:${get("minute")}:${get("second")}`;
-}
-
-function bubbles() {
-  const field = document.getElementById("bubbles");
-  field.innerHTML = Array.from({ length: 14 }, (_, i) => {
-    const size = 8 + (i % 5) * 6;
-    const left = (i * 7.1) % 100;
-    const delay = (i % 7) * -2;
-    return `<i style="width:${size}px;height:${size}px;left:${left}%;animation-delay:${delay}s"></i>`;
-  }).join("");
-}
-
 let announced = false;
 
 function render() {
-  const now = new Date();
-  const time = remaining(now.getTime());
-  clockNow(now);
-  document.getElementById("days").textContent = pad(time.days);
+  const now = Date.now();
+  const time = remaining(now);
+  document.getElementById("days").textContent = String(time.days);
+  document.getElementById("daysName").textContent = time.days === 1 ? "dia" : "dias";
   document.getElementById("hours").textContent = pad(time.hours);
   document.getElementById("minutes").textContent = pad(time.minutes);
   document.getElementById("seconds").textContent = pad(time.seconds);
+  document.getElementById("headline").textContent = time.done
+    ? "O Vitu está na portaria"
+    : "A portaria abre na segunda, às 8h";
 
-  const span = RETURN_AT - START_AT;
-  const gone = Math.min(span, Math.max(0, now.getTime() - START_AT));
-  const ratio = time.done ? 1 : gone / span;
-  document.getElementById("bar").style.width = `${Math.round(ratio * 100)}%`;
-  document.getElementById("progress").setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
-  document.getElementById("progressLbl").textContent = time.done
-    ? "As férias acabaram. Que bom te ver."
-    : `${Math.round(ratio * 100)}% das férias já passaram. O melhor ainda é a chegada.`;
-
-  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(now))));
+  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(new Date(now)))));
   document.getElementById("phrase").textContent = time.done
-    ? "Vitor Wallaf cruzou a portaria. Bem-vindo de volta, Vitu."
+    ? "Vitor Wallaf chegou. Bem-vindo de volta, Vitu. A casa estava te esperando."
     : PHRASES[index];
-  document.getElementById("calHead").textContent = time.done ? "Chegou" : "Faltam";
-  document.getElementById("calFoot").textContent = time.done
-    ? "o Vitu está de volta"
-    : "para o Vitu voltar para a gente";
+
+  const mornings = time.days === 0 ? "É esta manhã." : time.days === 1 ? "Falta uma manhã." : `Faltam ${time.days} manhãs até esse turno.`;
+  document.getElementById("shift").textContent = time.done
+    ? "Turno da manhã, aberto."
+    : `${mornings} Segunda-feira, 9 de novembro, 8h.`;
 
   if (!announced || time.seconds === 0 || time.done) {
     document.getElementById("live").textContent = sentence(time);
@@ -122,6 +90,5 @@ function render() {
   }
 }
 
-bubbles();
 render();
 setInterval(render, 250);

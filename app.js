@@ -1,5 +1,6 @@
-const START_DAY = "2026-10-16";
+const START_AT = Date.parse("2026-10-16T00:00:00-03:00");
 const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
+const START_DAY = "2026-10-16";
 
 const PHRASES = [
   "A portaria já guarda um bom dia com o seu nome, Vitu. Pode vir com calma.",
@@ -60,29 +61,47 @@ function sentence(time) {
   return `Faltam ${bit(time.days, "dia", "dias")}, ${bit(time.hours, "hora", "horas")}, ${bit(time.minutes, "minuto", "minutos")} e ${bit(time.seconds, "segundo", "segundos")} para o Vitu voltar.`;
 }
 
+function clockNow(date) {
+  const parts = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).formatToParts(date);
+  const get = (type) => parts.find((part) => part.type === type)?.value || "";
+  const day = get("weekday");
+  document.getElementById("nowDate").textContent = `${day.charAt(0).toUpperCase()}${day.slice(1)}, ${get("day")} de ${get("month")}`;
+  document.getElementById("nowTime").textContent = `${get("hour")}:${get("minute")}:${get("second")}`;
+}
+
 let announced = false;
 
 function render() {
-  const now = Date.now();
-  const time = remaining(now);
-  document.getElementById("days").textContent = String(time.days);
-  document.getElementById("daysName").textContent = time.days === 1 ? "dia" : "dias";
+  const now = new Date();
+  const time = remaining(now.getTime());
+  clockNow(now);
+  document.getElementById("days").textContent = pad(time.days);
   document.getElementById("hours").textContent = pad(time.hours);
   document.getElementById("minutes").textContent = pad(time.minutes);
   document.getElementById("seconds").textContent = pad(time.seconds);
-  document.getElementById("headline").textContent = time.done
-    ? "O Vitu está na portaria"
-    : "A portaria abre na segunda, às 8h";
+  document.getElementById("calHead").textContent = time.done ? "Chegou" : "Faltam";
+  document.getElementById("calFoot").textContent = time.done ? "o Vitu está de volta" : "para o Vitu voltar para a gente";
 
-  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(new Date(now)))));
+  const span = RETURN_AT - START_AT;
+  const ratio = time.done ? 1 : Math.min(1, Math.max(0, (now.getTime() - START_AT) / span));
+  document.getElementById("bar").style.width = `${Math.round(ratio * 100)}%`;
+  document.getElementById("progress").setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
+  document.getElementById("progressLbl").textContent = time.done
+    ? "As férias acabaram. Que bom te ver."
+    : `${Math.round(ratio * 100)}% das férias já passaram. O melhor ainda é a chegada.`;
+
+  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(now))));
   document.getElementById("phrase").textContent = time.done
     ? "Vitor Wallaf chegou. Bem-vindo de volta, Vitu. A casa estava te esperando."
     : PHRASES[index];
-
-  const mornings = time.days === 0 ? "É esta manhã." : time.days === 1 ? "Falta uma manhã." : `Faltam ${time.days} manhãs até esse turno.`;
-  document.getElementById("shift").textContent = time.done
-    ? "Turno da manhã, aberto."
-    : `${mornings} Segunda-feira, 9 de novembro, 8h.`;
 
   if (!announced || time.seconds === 0 || time.done) {
     document.getElementById("live").textContent = sentence(time);

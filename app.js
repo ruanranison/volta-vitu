@@ -1,6 +1,23 @@
-const START_AT = Date.parse("2026-10-16T00:00:00-03:00");
-const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
-const START_DAY = "2026-10-16";
+const DEFAULTS = { start: "2026-10-16T00:00", end: "2026-11-09T08:00" };
+
+function loadDates() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("volta-vitu-dates") || "null");
+    if (saved && saved.start && saved.end) return saved;
+  } catch (_) {}
+  return { ...DEFAULTS };
+}
+
+let dates = loadDates();
+
+function instant(local) {
+  const value = local.length === 16 ? `${local}:00` : local;
+  return Date.parse(`${value}-03:00`);
+}
+
+function startAt() { return instant(dates.start); }
+function returnAt() { return instant(dates.end); }
+function startDay() { return dates.start.slice(0, 10); }
 
 const PHRASES = [
   "Vitu, o relógio não para e a gente também não. Volta logo, a portaria está inquieta.",
@@ -44,8 +61,23 @@ function daysBetween(from, to) {
   return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86400000);
 }
 
+function formatReturn(ms) {
+  const parts = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+  }).formatToParts(new Date(ms));
+  const get = (type) => parts.find((part) => part.type === type)?.value || "";
+  const day = get("weekday");
+  const hour = String(Number(get("hour")));
+  return `${day.charAt(0).toUpperCase()}${day.slice(1)}, ${get("day")} de ${get("month")} de ${get("year")}, às ${hour}h`;
+}
+
 function remaining(now) {
-  const total = Math.max(0, Math.floor((RETURN_AT - now) / 1000));
+  const total = Math.max(0, Math.floor((returnAt() - now) / 1000));
   return {
     done: total === 0,
     days: Math.floor(total / 86400),
@@ -74,15 +106,16 @@ function render() {
   document.getElementById("calHead").textContent = time.done ? "Ele chegou" : "A espera aperta";
   document.getElementById("calFoot").textContent = time.done ? "a ansiedade virou festa" : "e a Solar não sossega sem o Vitu";
 
-  const span = RETURN_AT - START_AT;
-  const ratio = time.done ? 1 : Math.min(1, Math.max(0, (now.getTime() - START_AT) / span));
+  const span = Math.max(1, returnAt() - startAt());
+  const ratio = time.done ? 1 : Math.min(1, Math.max(0, (now.getTime() - startAt()) / span));
   document.getElementById("bar").style.width = `${Math.round(ratio * 100)}%`;
   document.getElementById("progress").setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
+  document.getElementById("returnDate").textContent = formatReturn(returnAt());
   document.getElementById("progressLbl").textContent = time.done
     ? "As férias acabaram. Que bom te ver."
     : `Só ${Math.round(ratio * 100)}% passou. O resto é ansiedade pura.`;
 
-  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(now))));
+  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(startDay(), saoPauloDate(now))));
   document.getElementById("phrase").textContent = time.done
     ? "Vitor Wallaf chegou. Bem-vindo de volta, Vitu. A casa estava te esperando."
     : PHRASES[index];
@@ -92,6 +125,48 @@ function render() {
     announced = true;
   }
 }
+
+const bubbles = document.getElementById("bubbles");
+for (let i = 0; i < 22; i += 1) {
+  const bubble = document.createElement("span");
+  const size = 6 + Math.random() * 18;
+  bubble.style.width = `${size}px`;
+  bubble.style.height = `${size}px`;
+  bubble.style.left = `${Math.random() * 100}%`;
+  bubble.style.animationDuration = `${7 + Math.random() * 11}s`;
+  bubble.style.animationDelay = `${-Math.random() * 12}s`;
+  bubbles.appendChild(bubble);
+}
+
+const settings = document.getElementById("settings");
+const startInput = document.getElementById("startInput");
+const endInput = document.getElementById("endInput");
+
+document.getElementById("gear").addEventListener("click", () => {
+  startInput.value = dates.start.slice(0, 16);
+  endInput.value = dates.end.slice(0, 16);
+  endInput.setCustomValidity("");
+  settings.showModal();
+});
+
+document.getElementById("cancelBtn").addEventListener("click", () => settings.close());
+
+endInput.addEventListener("input", () => endInput.setCustomValidity(""));
+
+document.getElementById("settingsForm").addEventListener("submit", (event) => {
+  const start = startInput.value;
+  const end = endInput.value;
+  if (instant(end) <= instant(start)) {
+    event.preventDefault();
+    endInput.setCustomValidity("O retorno precisa ser depois do início.");
+    endInput.reportValidity();
+    return;
+  }
+  dates = { start, end };
+  localStorage.setItem("volta-vitu-dates", JSON.stringify(dates));
+  announced = false;
+  render();
+});
 
 render();
 setInterval(render, 250);

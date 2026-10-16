@@ -12,6 +12,10 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F40009'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='16' font-family='Georgia'%3EV%3C/text%3E%3C/svg%3E" />
   </head>
   <body>
+    <svg class="ribbon" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,224 C240,120 480,320 720,240 C960,160 1200,40 1440,128 L1440,170 C1200,90 960,210 720,290 C480,370 240,170 0,270 Z" fill="#fff" opacity="0.95"/>
+    </svg>
+    <div class="bubbles" id="bubbles" aria-hidden="true"></div>
     <div class="party" aria-hidden="true">
       <span class="fizz"></span><span class="fizz"></span><span class="fizz"></span>
       <span class="fizz"></span><span class="fizz"></span><span class="fizz"></span>
@@ -44,7 +48,7 @@
           </div>
           <p class="timer-note" id="calFoot">e a Solar não sossega sem o Vitu</p>
           <div class="status">
-            <p class="return-date">Segunda-feira, 9 de novembro de 2026, às 8h</p>
+            <p class="return-date" id="returnDate"></p>
             <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Quanto das férias já passou">
               <div class="bar" id="bar"></div>
             </div>
@@ -54,6 +58,23 @@
       <p class="phrase" id="phrase"></p>
       <p class="live" id="live" aria-live="polite"></p>
     </main>
+    <button class="gear" id="gear" type="button" aria-label="Configurar datas">⚙</button>
+
+    <dialog id="settings">
+      <form method="dialog" id="settingsForm">
+        <h2>Configurar férias</h2>
+        <label>Início das férias
+          <input type="datetime-local" id="startInput" required />
+        </label>
+        <label>Retorno ao trabalho
+          <input type="datetime-local" id="endInput" required />
+        </label>
+        <div class="actions">
+          <button value="cancel" type="button" id="cancelBtn">Cancelar</button>
+          <button value="save" type="submit" class="primary">Salvar</button>
+        </div>
+      </form>
+    </dialog>
     <script src="app.js"></script>
   </body>
 </html>

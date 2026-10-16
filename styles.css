@@ -18,6 +18,112 @@ body {
   text-align: center;
 }
 
+.ribbon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 7.5rem;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bubbles span {
+  position: absolute;
+  bottom: -3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+  animation: gas linear infinite;
+}
+
+@keyframes gas {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  12% { opacity: 0.9; }
+  100% { transform: translateY(-110vh) translateX(12px); opacity: 0; }
+}
+
+.gear {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 4;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--coke);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
+}
+
+dialog {
+  width: min(22rem, calc(100% - 2rem));
+  border: 0;
+  border-radius: 1rem;
+  padding: 1.2rem 1.15rem 1rem;
+  color: var(--ink);
+  font-family: var(--text);
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+
+dialog h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+dialog label {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+dialog input {
+  font: inherit;
+  font-weight: 500;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #e4e4e4;
+  border-radius: 0.55rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+}
+
+.actions button {
+  font: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  background: #f3f3f3;
+  cursor: pointer;
+}
+
+.actions .primary {
+  background: var(--coke);
+  color: var(--white);
+}
+
 .party {
   display: none;
   position: fixed;
@@ -237,6 +343,7 @@ main {
   font-size: 1.12rem;
   font-weight: 600;
   line-height: 1.4;
+  text-shadow: 0 0 0.35rem rgba(244, 0, 9, 0.9);
 }
 
 .live {

@@ -1,6 +1,5 @@
+const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
 const START = "2026-10-16";
-const RETURN = "2026-11-08";
-const SPAN = 23;
 
 const PHRASES = [
   "A portaria abriu no horário. O Vitu, não. A casa inteira sentiu.",
@@ -25,16 +24,19 @@ const PHRASES = [
   "O turno abriu a porta devagar, só para ver se o Vitu tinha voltado.",
   "Quase dá para ouvir o crachá. Ainda é cedo. O Vitu segue de férias.",
   "A ansiedade já não cabe no estoque. Falta pouco para o Vitu.",
-  "Amanhã a conta muda de novo. A casa já separou o lugar do Vitu.",
+  "A casa já separou o lugar do Vitu. O relógio não para.",
+  "Segunda de manhã, 8h. Até lá, cada segundo conta o Vitu.",
 ];
 
-function todayInSaoPaulo() {
+const pad = (value) => String(value).padStart(2, "0");
+
+function saoPauloDate(date) {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(new Date());
+  }).format(date);
 }
 
 function daysBetween(from, to) {
@@ -43,36 +45,48 @@ function daysBetween(from, to) {
   return Math.round((end - start) / 86400000);
 }
 
+function remaining(now) {
+  const ms = Math.max(0, RETURN_AT - now);
+  const total = Math.floor(ms / 1000);
+  return {
+    done: ms === 0,
+    days: Math.floor(total / 86400),
+    hours: Math.floor(total / 3600) % 24,
+    minutes: Math.floor(total / 60) % 60,
+    seconds: total % 60,
+  };
+}
+
+function sentence(time) {
+  if (time.done) return "O Vitu voltou.";
+  const days = time.days === 1 ? "1 dia" : `${time.days} dias`;
+  const hours = time.hours === 1 ? "1 hora" : `${time.hours} horas`;
+  const minutes = time.minutes === 1 ? "1 minuto" : `${time.minutes} minutos`;
+  const seconds = time.seconds === 1 ? "1 segundo" : `${time.seconds} segundos`;
+  return `Faltam ${days}, ${hours}, ${minutes} e ${seconds} para o Vitu voltar.`;
+}
+
+let announced = false;
+
 function render() {
-  const today = todayInSaoPaulo();
-  const left = Math.max(0, daysBetween(today, RETURN));
-  const elapsed = left === 0
-    ? SPAN
-    : Math.min(SPAN, Math.max(0, daysBetween(START, today) + 1));
-  const count = document.getElementById("count");
-  const headline = document.getElementById("headline");
-  const phrase = document.getElementById("phrase");
-  const track = document.getElementById("track");
+  const now = new Date();
+  const time = remaining(now);
+  document.getElementById("days").textContent = String(time.days);
+  document.getElementById("hours").textContent = pad(time.hours);
+  document.getElementById("minutes").textContent = pad(time.minutes);
+  document.getElementById("seconds").textContent = pad(time.seconds);
+  document.getElementById("headline").textContent = time.done ? "O Vitu voltou" : "Para o Vitu voltar";
 
-  count.textContent = String(left);
+  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START, saoPauloDate(now))));
+  document.getElementById("phrase").textContent = time.done
+    ? "Vitor Wallaf cruzou a portaria. O trabalhador mais assíduo está de volta."
+    : PHRASES[index];
 
-  if (left === 0) {
-    headline.innerHTML = "O <em>Vitu</em> voltou";
-    phrase.textContent = "Vitor Wallaf cruzou a portaria. O trabalhador mais assíduo está de volta, e a casa inteira pode soltar o ar.";
-  } else if (left === 1) {
-    headline.innerHTML = "Falta 1 dia para o <em>Vitu</em> voltar";
-    phrase.textContent = PHRASES[SPAN - 1];
-  } else {
-    headline.innerHTML = `Faltam ${left} dias para o <em>Vitu</em> voltar`;
-    const index = Math.min(SPAN - 1, Math.max(0, SPAN - left));
-    phrase.textContent = PHRASES[index];
+  if (!announced || time.seconds === 0 || time.done) {
+    document.getElementById("live").textContent = sentence(time);
+    announced = true;
   }
-
-  track.innerHTML = Array.from({ length: SPAN }, (_, i) => {
-    const done = i < elapsed || left === 0;
-    return `<li class="${done ? "done" : ""}"></li>`;
-  }).join("");
 }
 
 render();
-setInterval(render, 60 * 1000);
+setInterval(render, 250);

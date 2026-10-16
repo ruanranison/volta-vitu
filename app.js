@@ -1,9 +1,11 @@
-const DEFAULTS = { start: "2026-10-16T00:00", end: "2026-10-19T08:00" };
+const DEFAULTS = { start: "2026-10-16T00:00", end: "2026-10-26T08:00" };
 
 function loadDates() {
   try {
     const saved = JSON.parse(localStorage.getItem("volta-vitu-dates") || "null");
-    if (saved && saved.start && saved.end && !String(saved.end).startsWith("2026-11-09")) return saved;
+    const end = saved && String(saved.end || "");
+    const stale = end.startsWith("2026-11-09") || end.startsWith("2026-10-19");
+    if (saved && saved.start && saved.end && !stale) return saved;
   } catch (_) {}
   return { ...DEFAULTS };
 }
@@ -22,12 +24,15 @@ function endDay() { return dates.end.slice(0, 10); }
 const PHRASES_BY_DAYS_LEFT = [
   "É hoje, Vitu. Às 8h a porta abre. A casa inteira já está na ponta do pé.",
   "Amanhã, 8h. Ninguém finge calma. A ansiedade já chegou antes de você.",
-  "Falta um dia e a Solar conta as horas em voz alta. Volta, Vitu.",
+  "Faltam dois dias. A Solar conta as horas em voz alta. Volta, Vitu.",
   "Segunda está logo ali. A espera já aperta. A casa não sossega sem você.",
-  "Poucos dias. Cada hora pesa mais. A portaria olha a rua o tempo todo.",
-  "A volta se aproximou. O relógio incomoda. A Solar quer você de volta.",
-  "A saudade cresce por dia. O seu lugar está vazio e isso já incomoda.",
-  "Ainda dá para respirar, mas a ansiedade já sentou na cadeira do Vitu.",
+  "Quatro dias. Cada hora pesa mais. A portaria olha a rua o tempo todo.",
+  "A outra segunda se aproximou. O relógio incomoda. A Solar quer você de volta.",
+  "Menos de uma semana. A saudade cresce por dia e o seu lugar continua vazio.",
+  "A ansiedade sobe um pouco a cada manhã. A casa já pergunta quando você chega.",
+  "A semana da volta começou a aparecer. A espera deixou de ser leve.",
+  "Mais um dia se foi, Vitu. A contagem encolhe e a saudade não.",
+  "É na outra segunda, às 8h. Ainda falta um pouco, mas a casa já está inquieta.",
 ];
 
 const pad = (n) => String(n).padStart(2, "0");

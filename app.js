@@ -61,34 +61,17 @@ function sentence(time) {
   return `Faltam ${bit(time.days, "dia", "dias")}, ${bit(time.hours, "hora", "horas")}, ${bit(time.minutes, "minuto", "minutos")} e ${bit(time.seconds, "segundo", "segundos")} para o Vitu voltar.`;
 }
 
-function clockNow(date) {
-  const parts = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).formatToParts(date);
-  const get = (type) => parts.find((part) => part.type === type)?.value || "";
-  const day = get("weekday");
-  document.getElementById("nowDate").textContent = `${day.charAt(0).toUpperCase()}${day.slice(1)}, ${get("day")} de ${get("month")}`;
-  document.getElementById("nowTime").textContent = `${get("hour")}:${get("minute")}:${get("second")}`;
-}
-
 let announced = false;
 
 function render() {
   const now = new Date();
   const time = remaining(now.getTime());
-  clockNow(now);
   document.getElementById("days").textContent = pad(time.days);
   document.getElementById("hours").textContent = pad(time.hours);
   document.getElementById("minutes").textContent = pad(time.minutes);
   document.getElementById("seconds").textContent = pad(time.seconds);
-  document.getElementById("calHead").textContent = time.done ? "Chegou" : "Faltam";
-  document.getElementById("calFoot").textContent = time.done ? "o Vitu está de volta" : "para o Vitu voltar para a gente";
+  document.getElementById("calHead").textContent = time.done ? "Ele chegou" : "Até a volta";
+  document.getElementById("calFoot").textContent = time.done ? "o Vitu está de volta" : "para o Vitu cruzar a portaria";
 
   const span = RETURN_AT - START_AT;
   const ratio = time.done ? 1 : Math.min(1, Math.max(0, (now.getTime() - START_AT) / span));

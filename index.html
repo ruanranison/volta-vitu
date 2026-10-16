@@ -14,27 +14,22 @@
   <body>
     <header class="top">
       <p class="brand">Coca-Cola</p>
-      <p class="now"><span id="nowDate"></span><br /><span id="nowTime"></span></p>
     </header>
 
     <main>
       <div class="hero">
         <img class="bottle" src="bottle.png" alt="Garrafa de vidro da Coca-Cola" />
 
-        <section class="calendar" aria-labelledby="calHead">
-          <div class="rings" aria-hidden="true"><span></span><span></span></div>
-          <p class="cal-head" id="calHead">Faltam</p>
-          <div class="countdown">
-            <p class="unit"><span class="num" id="days">00</span><span class="lbl">dias</span></p>
-            <p class="colon" aria-hidden="true">:</p>
-            <p class="unit"><span class="num" id="hours">00</span><span class="lbl">horas</span></p>
-            <p class="colon" aria-hidden="true">:</p>
-            <p class="unit"><span class="num" id="minutes">00</span><span class="lbl">minutos</span></p>
-            <p class="colon" aria-hidden="true">:</p>
-            <p class="unit"><span class="num" id="seconds">00</span><span class="lbl">segundos</span></p>
+        <section class="timer" aria-labelledby="calHead">
+          <p class="timer-kicker" id="calHead">Até a volta</p>
+          <div class="digits">
+            <p class="chip"><span class="num" id="days">00</span><span class="lbl">dias</span></p>
+            <p class="chip"><span class="num" id="hours">00</span><span class="lbl">horas</span></p>
+            <p class="chip"><span class="num" id="minutes">00</span><span class="lbl">minutos</span></p>
+            <p class="chip"><span class="num" id="seconds">00</span><span class="lbl">segundos</span></p>
           </div>
-          <p class="cal-foot" id="calFoot">para o Vitu voltar para a gente</p>
-          <p class="return-date">Segunda-feira, 9 de novembro de 2026, 8h</p>
+          <p class="timer-note" id="calFoot">para o Vitu cruzar a portaria</p>
+          <p class="return-date">Segunda-feira, 9 de novembro de 2026, às 8h</p>
           <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Quanto das férias já passou">
             <div class="bar" id="bar"></div>
           </div>

@@ -3,30 +3,30 @@ const RETURN_AT = Date.parse("2026-11-09T08:00:00-03:00");
 const START_DAY = "2026-10-16";
 
 const PHRASES = [
-  "A portaria já guarda um bom dia com o seu nome, Vitu. Pode vir com calma.",
-  "O cafezinho da manhã deixou uma xícara sua. A casa está leve só de esperar.",
-  "Cada garrafa na linha sai com pressa boa. A pressa é te ver de volta.",
-  "A Solar separou a sua cadeira, o seu turno e a melhor história da semana.",
-  "Descansa, Vitu. A recepção está sendo ensaiada sem pressa e com carinho.",
-  "O corredor vermelho vai ficar curto de novo no dia em que você passar.",
-  "A equipe fala de você sorrindo. Segunda de manhã vai ser o dia bom.",
-  "O seu crachá tem hora marcada. A portaria abre às 8h, sem falta.",
-  "Tem gente contando o seu retorno como quem espera o intervalo.",
-  "A escala da volta já está escrita. O primeiro nome da manhã é o seu.",
-  "A casa brinda antes. O gole gelado fica para quando você chegar.",
-  "Vitu, o lugar não esfriou. Está quente de gente que gosta de você aqui.",
-  "O turno da manhã abre a porta como quem recebe visita querida.",
-  "Você faz falta do jeito certo: aquele que a gente quer de volta logo.",
-  "A operação segue, e o melhor pedaço dela volta com você.",
-  "A saudade está doce. A chegada vai ser melhor.",
-  "Já deixamos o seu canto pronto. Falta só o Vitu sentar.",
-  "Falta pouco para a Solar ficar inteira. O pedaço que falta tem nome.",
-  "O relógio trabalha a nosso favor. Cada segundo te traz para a portaria.",
-  "O bom dia já foi ensaiado. Agora só falta quem responde.",
-  "O descanso é seu, Vitu. A alegria de abrir a porta é nossa.",
-  "Dá para ouvir a equipe contando. A portaria escuta da rua.",
-  "Quase dá para ver a segunda. O turno das 8h tem o seu nome na frente.",
-  "Última noite dessa espera. Amanhã, 8h, a casa te recebe de braços abertos.",
+  "Vitu, o relógio não para e a gente também não. Volta logo, a portaria está inquieta.",
+  "Já olhamos a porta mais vezes do que o estoque. A ansiedade tem o seu nome.",
+  "Cada minuto sem você pesa. A Solar conta alto: volta, Vitu.",
+  "O cafezinho esfria esperando. A xícara sua está ali, e a gente também.",
+  "Não dá para fingir calma. A casa inteira pergunta quando o Vitu chega.",
+  "O corredor parece mais longo sem o seu passo. A gente acelera o relógio.",
+  "A saudade já não é doce, é pressa. Volta, que a equipe não aguenta mais.",
+  "Seu crachá está na mesa e o olhar de todo mundo está na porta.",
+  "A gente conta de novo, e de novo, e ainda parece longe. Anda, Vitu.",
+  "A escala da volta está riscada de tanto a gente conferir. O primeiro nome é o seu.",
+  "Até a garrafa na linha parece apressada. A pressa é te ver entrar.",
+  "Vitu, o lugar esquentou de ansiedade. Falta você para a casa respirar.",
+  "O turno abre a porta e fecha desapontado. Ainda não é você. Ainda.",
+  "Faz falta do jeito que dói um pouco. A gente quer o Vitu de volta agora.",
+  "A operação segue, mas o pedaço melhor dela está de férias e isso incomoda.",
+  "A saudade virou contagem regressiva. Cada segundo é uma cobrança carinhosa.",
+  "Seu canto está pronto e vazio. Esse vazio é que não deixa a gente quieta.",
+  "Falta pouco e mesmo assim a ansiedade cresce. O pedaço que falta se chama Vitu.",
+  "O relógio trabalha devagar de propósito. A gente empurra ele na direção da portaria.",
+  "O bom dia já foi ensaiado tantas vezes que saiu rouco. Falta quem responde.",
+  "Descansa se conseguir, Vitu. Aqui ninguém descansa de te esperar.",
+  "Dá para ouvir a equipe contando os dias no corredor. A portaria escuta da rua.",
+  "Quase dá para ver a segunda. A ansiedade já chegou antes de você.",
+  "Última noite. Amanhã, 8h, a porta abre e a casa inteira solta o ar.",
 ];
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -70,8 +70,8 @@ function render() {
   document.getElementById("hours").textContent = pad(time.hours);
   document.getElementById("minutes").textContent = pad(time.minutes);
   document.getElementById("seconds").textContent = pad(time.seconds);
-  document.getElementById("calHead").textContent = time.done ? "Ele chegou" : "Até a volta";
-  document.getElementById("calFoot").textContent = time.done ? "o Vitu está de volta" : "para o Vitu cruzar a portaria";
+  document.getElementById("calHead").textContent = time.done ? "Ele chegou" : "A espera aperta";
+  document.getElementById("calFoot").textContent = time.done ? "a ansiedade virou festa" : "e a Solar não sossega sem o Vitu";
 
   const span = RETURN_AT - START_AT;
   const ratio = time.done ? 1 : Math.min(1, Math.max(0, (now.getTime() - START_AT) / span));
@@ -79,7 +79,7 @@ function render() {
   document.getElementById("progress").setAttribute("aria-valuenow", String(Math.round(ratio * 100)));
   document.getElementById("progressLbl").textContent = time.done
     ? "As férias acabaram. Que bom te ver."
-    : `${Math.round(ratio * 100)}% das férias já passaram. O melhor ainda é a chegada.`;
+    : `Só ${Math.round(ratio * 100)}% passou. O resto é ansiedade pura.`;
 
   const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(START_DAY, saoPauloDate(now))));
   document.getElementById("phrase").textContent = time.done

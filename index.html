@@ -17,25 +17,32 @@
     </header>
 
     <main>
-      <div class="hero">
+      <div class="stage">
+        <figure class="portrait">
+          <img src="vitu.jpg" alt="Vitor Wallaf, o Vitu" />
+          <figcaption>
+            <span class="who">Vitu</span>
+            <span class="role">Vitor Wallaf · a casa está ansiosa</span>
+          </figcaption>
+        </figure>
         <img class="bottle" src="bottle.png" alt="Garrafa de vidro da Coca-Cola" />
+      </div>
 
-        <section class="timer" aria-labelledby="calHead">
-          <p class="timer-kicker" id="calHead">Até a volta</p>
+      <section class="timer" aria-labelledby="calHead">
+          <p class="timer-kicker" id="calHead">A espera aperta</p>
           <div class="digits">
             <p class="chip"><span class="num" id="days">00</span><span class="lbl">dias</span></p>
             <p class="chip"><span class="num" id="hours">00</span><span class="lbl">horas</span></p>
             <p class="chip"><span class="num" id="minutes">00</span><span class="lbl">minutos</span></p>
             <p class="chip"><span class="num" id="seconds">00</span><span class="lbl">segundos</span></p>
           </div>
-          <p class="timer-note" id="calFoot">para o Vitu cruzar a portaria</p>
+          <p class="timer-note" id="calFoot">e a Solar não sossega sem o Vitu</p>
           <p class="return-date">Segunda-feira, 9 de novembro de 2026, às 8h</p>
           <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Quanto das férias já passou">
             <div class="bar" id="bar"></div>
           </div>
           <p class="progress-lbl" id="progressLbl"></p>
         </section>
-      </div>
       <p class="phrase" id="phrase"></p>
       <p class="live" id="live" aria-live="polite"></p>
     </main>

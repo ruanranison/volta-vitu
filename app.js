@@ -1,9 +1,9 @@
-const DEFAULTS = { start: "2026-10-16T00:00", end: "2026-11-09T08:00" };
+const DEFAULTS = { start: "2026-10-16T00:00", end: "2026-10-19T08:00" };
 
 function loadDates() {
   try {
     const saved = JSON.parse(localStorage.getItem("volta-vitu-dates") || "null");
-    if (saved && saved.start && saved.end) return saved;
+    if (saved && saved.start && saved.end && !String(saved.end).startsWith("2026-11-09")) return saved;
   } catch (_) {}
   return { ...DEFAULTS };
 }
@@ -17,33 +17,17 @@ function instant(local) {
 
 function startAt() { return instant(dates.start); }
 function returnAt() { return instant(dates.end); }
-function startDay() { return dates.start.slice(0, 10); }
+function endDay() { return dates.end.slice(0, 10); }
 
-const PHRASES = [
-  "Vitu, o relógio não para e a gente também não. Volta logo, a portaria está inquieta.",
-  "Já olhamos a porta mais vezes do que o estoque. A ansiedade tem o seu nome.",
-  "Cada minuto sem você pesa. A Solar conta alto: volta, Vitu.",
-  "O cafezinho esfria esperando. A xícara sua está ali, e a gente também.",
-  "Não dá para fingir calma. A casa inteira pergunta quando o Vitu chega.",
-  "O corredor parece mais longo sem o seu passo. A gente acelera o relógio.",
-  "A saudade já não é doce, é pressa. Volta, que a equipe não aguenta mais.",
-  "Seu crachá está na mesa e o olhar de todo mundo está na porta.",
-  "A gente conta de novo, e de novo, e ainda parece longe. Anda, Vitu.",
-  "A escala da volta está riscada de tanto a gente conferir. O primeiro nome é o seu.",
-  "Até a garrafa na linha parece apressada. A pressa é te ver entrar.",
-  "Vitu, o lugar esquentou de ansiedade. Falta você para a casa respirar.",
-  "O turno abre a porta e fecha desapontado. Ainda não é você. Ainda.",
-  "Faz falta do jeito que dói um pouco. A gente quer o Vitu de volta agora.",
-  "A operação segue, mas o pedaço melhor dela está de férias e isso incomoda.",
-  "A saudade virou contagem regressiva. Cada segundo é uma cobrança carinhosa.",
-  "Seu canto está pronto e vazio. Esse vazio é que não deixa a gente quieta.",
-  "Falta pouco e mesmo assim a ansiedade cresce. O pedaço que falta se chama Vitu.",
-  "O relógio trabalha devagar de propósito. A gente empurra ele na direção da portaria.",
-  "O bom dia já foi ensaiado tantas vezes que saiu rouco. Falta quem responde.",
-  "Descansa se conseguir, Vitu. Aqui ninguém descansa de te esperar.",
-  "Dá para ouvir a equipe contando os dias no corredor. A portaria escuta da rua.",
-  "Quase dá para ver a segunda. A ansiedade já chegou antes de você.",
-  "Última noite. Amanhã, 8h, a porta abre e a casa inteira solta o ar.",
+const PHRASES_BY_DAYS_LEFT = [
+  "É hoje, Vitu. Às 8h a porta abre. A casa inteira já está na ponta do pé.",
+  "Amanhã, 8h. Ninguém finge calma. A ansiedade já chegou antes de você.",
+  "Falta um dia e a Solar conta as horas em voz alta. Volta, Vitu.",
+  "Segunda está logo ali. A espera já aperta. A casa não sossega sem você.",
+  "Poucos dias. Cada hora pesa mais. A portaria olha a rua o tempo todo.",
+  "A volta se aproximou. O relógio incomoda. A Solar quer você de volta.",
+  "A saudade cresce por dia. O seu lugar está vazio e isso já incomoda.",
+  "Ainda dá para respirar, mas a ansiedade já sentou na cadeira do Vitu.",
 ];
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -115,10 +99,11 @@ function render() {
     ? "As férias acabaram. Que bom te ver."
     : `Só ${Math.round(ratio * 100)}% passou. O resto é ansiedade pura.`;
 
-  const index = Math.min(PHRASES.length - 1, Math.max(0, daysBetween(startDay(), saoPauloDate(now))));
+  const daysLeft = Math.max(0, daysBetween(saoPauloDate(now), endDay()));
+  const index = Math.min(PHRASES_BY_DAYS_LEFT.length - 1, daysLeft);
   document.getElementById("phrase").textContent = time.done
     ? "Vitor Wallaf chegou. Bem-vindo de volta, Vitu. A casa estava te esperando."
-    : PHRASES[index];
+    : PHRASES_BY_DAYS_LEFT[index];
 
   if (!announced || time.seconds === 0 || time.done) {
     document.getElementById("live").textContent = sentence(time);

@@ -70,6 +70,7 @@ function render() {
   document.getElementById("hours").textContent = pad(time.hours);
   document.getElementById("minutes").textContent = pad(time.minutes);
   document.getElementById("seconds").textContent = pad(time.seconds);
+  document.body.classList.toggle("is-back", time.done);
   document.getElementById("calHead").textContent = time.done ? "Ele chegou" : "A espera aperta";
   document.getElementById("calFoot").textContent = time.done ? "a ansiedade virou festa" : "e a Solar não sossega sem o Vitu";
 

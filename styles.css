@@ -18,8 +18,83 @@ body {
   text-align: center;
 }
 
+.party {
+  display: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.is-back .party { display: block; }
+
+.fizz,
+.floater {
+  position: absolute;
+  bottom: -8rem;
+  animation: rise linear infinite;
+}
+
+.fizz {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.floater {
+  width: 3.4rem;
+  height: auto;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.2));
+}
+
+.party > :nth-child(1) { left: 4%; width: 0.55rem; height: 0.55rem; animation-duration: 7s; animation-delay: -1s; }
+.party > :nth-child(2) { left: 14%; width: 1.3rem; height: 1.3rem; animation-duration: 11s; animation-delay: -6s; }
+.party > :nth-child(3) { left: 24%; animation-duration: 8.5s; animation-delay: -3s; }
+.party > :nth-child(4) { left: 36%; width: 0.45rem; height: 0.45rem; animation-duration: 6.5s; animation-delay: -4s; }
+.party > :nth-child(5) { left: 48%; width: 1.1rem; height: 1.1rem; animation-duration: 10s; animation-delay: -8s; }
+.party > :nth-child(6) { left: 58%; animation-duration: 9s; animation-delay: -2.5s; }
+.party > :nth-child(7) { left: 70%; width: 1.5rem; height: 1.5rem; animation-duration: 12s; animation-delay: -9s; }
+.party > :nth-child(8) { left: 80%; width: 0.6rem; height: 0.6rem; animation-duration: 7.5s; animation-delay: -5s; }
+.party > :nth-child(9) { left: 90%; animation-duration: 8s; animation-delay: -7s; }
+.party > :nth-child(10) { left: 30%; width: 0.7rem; height: 0.7rem; animation-duration: 13s; animation-delay: -11s; }
+.party > :nth-child(11) { left: 8%; animation-duration: 16s; animation-delay: -4s; }
+.party > :nth-child(12) { left: 42%; animation-duration: 18s; animation-delay: -12s; }
+.party > :nth-child(13) { left: 66%; animation-duration: 15s; animation-delay: -7s; }
+.party > :nth-child(14) { left: 86%; animation-duration: 17s; animation-delay: -2s; }
+
+.top,
+main {
+  position: relative;
+  z-index: 1;
+}
+
 .top {
   padding: 1rem 1.25rem 0;
+}
+
+body.is-back .brand {
+  display: inline-block;
+  animation: sway 2.2s ease-in-out infinite;
+}
+
+body.is-back .portrait img {
+  animation: halo 1.8s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from { transform: translateY(0) rotate(-8deg); }
+  to { transform: translateY(-120vh) rotate(10deg); }
+}
+
+@keyframes sway {
+  50% { transform: rotate(-3deg) scale(1.05); }
+}
+
+@keyframes halo {
+  50% { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.55); }
 }
 
 .brand, .timer-kicker, .timer-note, .return-date, .progress-lbl, .phrase, .chip { margin: 0; }
